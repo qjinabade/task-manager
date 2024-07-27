@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+    <h2>{{ task.title }}</h2>
+    <p>{{ task.description }}</p>
+    <p>Status: {% if task.completed %}Completed{% else %}Pending{% endif %}</p>
+    <a class="btn btn-secondary" href="{% url 'task_update' task.pk %}">Edit</a>
+    <form method="post" action="{% url 'task_delete' task.pk %}" style="display:inline;">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Delete</button>
+    </form>
+    <a class="btn btn-primary" href="{% url 'task_list' %}">Back to Tasks</a>
+</div>
+{% endblock %}
