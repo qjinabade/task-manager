@@ -3,5 +3,30 @@
 <div class="container mt-5">
     <h1>Welcome to Task Manager</h1>
     <p>This is the home page.</p>
+    
+    <a href="{% url 'task_create' %}" class="btn btn-primary">Create Task</a>
+    
+    <h2 class="mt-5">Your Tasks</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Task</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for task in tasks %}
+            <tr>
+                <td>{{ task.title }}</td>
+                <td>{{ task.description }}</td>
+                <td>
+                    <a href="{% url 'task_update' task.id %}" class="btn btn-warning">Edit</a>
+                    <a href="{% url 'task_delete' task.id %}" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
 {% endblock %}
+
