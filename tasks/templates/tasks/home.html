@@ -7,10 +7,23 @@
     <a href="{% url 'task_create' %}" class="btn btn-primary">Create Task</a>
     
     <h2 class="mt-5">Your Tasks</h2>
+    
+    <!-- Filter Tasks Dropdown -->
+    <div class="mb-3">
+        <label for="filter" class="form-label">Filter Tasks</label>
+        <select id="filter" class="form-select" onchange="window.location.href='?status=' + this.value;">
+            <option value="">All</option>
+            <option value="complete">Completed</option>
+            <option value="incomplete">Incomplete</option>
+        </select>
+    </div>
+
     <table class="table">
         <thead>
             <tr>
                 <th>Task</th>
+                <th>Description</th>
+                <th>Status</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -20,8 +33,20 @@
                 <td>{{ task.title }}</td>
                 <td>{{ task.description }}</td>
                 <td>
+                    {% if task.is_complete %}
+                        <span class="badge bg-success">Complete</span>
+                    {% else %}
+                        <span class="badge bg-warning">Incomplete</span>
+                    {% endif %}
+                </td>
+                <td>
                     <a href="{% url 'task_update' task.id %}" class="btn btn-warning">Edit</a>
                     <a href="{% url 'task_delete' task.id %}" class="btn btn-danger">Delete</a>
+                    {% if task.is_complete %}
+                        <a href="{% url 'task_incomplete' task.id %}" class="btn btn-secondary">Mark as Incomplete</a>
+                    {% else %}
+                        <a href="{% url 'task_complete' task.id %}" class="btn btn-success">Mark as Complete</a>
+                    {% endif %}
                 </td>
             </tr>
             {% endfor %}
@@ -29,4 +54,3 @@
     </table>
 </div>
 {% endblock %}
-

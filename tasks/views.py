@@ -59,3 +59,33 @@ def task_delete(request, pk):
         task.delete()
         return redirect('task_list')
     return render(request, 'tasks/task_confirm_delete.html', {'task': task})
+
+
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from .models import Task
+from .forms import TaskForm
+
+@login_required
+def task_complete(request, pk):
+    task = get_object_or_404(Task, pk=pk, user=request.user)
+    task.completed = True
+    task.save()
+    return redirect('task_list')
+
+@login_required
+def mark_task_incomplete(request, pk):
+    task = get_object_or_404(Task, pk=pk, user=request.user)
+    task.completed = False
+    task.save()
+    return redirect('task_list')
+@login_required
+def task_list(request):
+    filter_by = request.GET.get('filter', 'all')
+    if filter_by == 'completed':
+        tasks = Task.objects.filter(user=request.user, completed=True)
+    elif filter_by == 'pending':
+        tasks = Task.objects.filter(user=request.user, completed=False)
+    else:
+        tasks = Task.objects.filter(user=request.user)
+    return render(request, 'tasks/task_list.html', {'tasks': tasks})

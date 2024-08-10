@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+    <h1>Task List</h1>
+
+    <div>
+        <!-- Filter Form -->
+        <form method="get" action="">
+            <label for="status">Filter by status:</label>
+            <select name="status" id="status" onchange="this.form.submit();">
+                <option value="">All</option>
+                <option value="complete">Complete</option>
+                <option value="incomplete">Incomplete</option>
+            </select>
+        </form>
+    </div>
+    <div class="mb-3">
+        <a href="{% url 'task_list' %}?filter=all" class="btn btn-secondary">All</a>
+        <a href="{% url 'task_list' %}?filter=completed" class="btn btn-success">Completed</a>
+        <a href="{% url 'task_list' %}?filter=pending" class="btn btn-warning">Pending</a>
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for task in tasks %}
+            <tr>
+                <td>{{ task.title }}</td>
+                <td>{{ task.description }}</td>
+                <td>{{ task.completed|yesno:"Completed,Pending" }}</td>
+                <td>
+                    {% if not task.completed %}
+                    <a href="{% url 'mark_task_complete' task.pk %}" class="btn btn-success">Mark as Complete</a>
+                    {% else %}
+                    <a href="{% url 'mark_task_incomplete' task.pk %}" class="btn btn-warning">Mark as Incomplete</a>
+                    {% endif %}
+                    <a href="{% url 'task_update' task.pk %}" class="btn btn-primary">Edit</a>
+                    <a href="{% url 'task_delete' task.pk %}" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
